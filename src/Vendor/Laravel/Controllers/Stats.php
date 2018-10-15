@@ -122,7 +122,7 @@ class Stats extends Controller
                             'created_at',
                         ]);
 
-        return Datatables::of($query)
+        return \Bllim\Datatables\Datatables::of($query)
             ->edit_column('route_name', function ($row) {
                 $path = $row->routePath;
 
@@ -212,7 +212,7 @@ class Stats extends Controller
                             'updated_at',
                         ]);
 
-        return Datatables::of($query)
+        return \Bllim\Datatables\Datatables::of($query)
                 ->edit_column('updated_at', function ($row) {
                     return "{$row->updated_at->diffForHumans()}";
                 })
@@ -223,14 +223,14 @@ class Stats extends Controller
     {
         $query = Tracker::events($session->getMinutes(), false);
 
-        return Datatables::of($query)->make(true);
+        return \Bllim\Datatables\Datatables::of($query)->make(true);
     }
 
     public function apiUsers(Session $session)
     {
         $username_column = Tracker::getConfig('authenticated_user_username_column');
 
-        return Datatables::of(Tracker::users($session->getMinutes(), false))
+        return \Bllim\Datatables\Datatables::of(Tracker::users($session->getMinutes(), false))
                 ->edit_column('user_id', function ($row) use ($username_column) {
                     return "{$row->user->$username_column}";
                 })
@@ -261,7 +261,7 @@ class Stats extends Controller
                 'updated_at',
         ]);
 
-        return Datatables::of($query)
+        return \Bllim\Datatables\Datatables::of($query)
                 ->edit_column('id', function ($row) use ($username_column) {
                     $uri = route('tracker.stats.log', $row->uuid);
 
