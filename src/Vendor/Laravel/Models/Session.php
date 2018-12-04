@@ -21,7 +21,13 @@ class Session extends Base
 
     public function __construct(array $attributes = [])
     {
+        // https://github.com/antonioribeiro/tracker/issues/402
+        static::$traitInitializers['PragmaRX\Tracker\Vendor\Laravel\Models\Session'] = ['placeholder'];
         parent::__construct($attributes);
+    }
+
+    protected function placeholder(){
+        // Satisfy the initializer above
     }
 
     public function user()
