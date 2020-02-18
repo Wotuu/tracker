@@ -51,6 +51,8 @@ class ServiceProvider extends PragmaRXServiceProvider
 
     protected $packageNameCapitalized = 'Tracker';
 
+    protected $repositoryManagerIsBooted = false;
+
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -79,11 +81,19 @@ class ServiceProvider extends PragmaRXServiceProvider
 
         $this->registerErrorHandler();
 
-        if (!isLaravel5()) {
-            $this->bootTracker();
-        }
+        $this->bootTracker();
 
         $this->loadTranslations();
+    }
+
+    /**
+     * Check if the service provider is full booted.
+     *
+     * @return void
+     */
+    public function isFullyBooted()
+    {
+        return $this->repositoryManagerIsBooted;
     }
 
     /**
@@ -259,7 +269,7 @@ class ServiceProvider extends PragmaRXServiceProvider
                 $app['request']->server('HTTP_USER_AGENT')
             );
 
-            return new RepositoryManager(
+            $manager = new RepositoryManager(
                 new GeoIp($this->getConfig('geoip_database_path')),
 
                 new MobileDetect(),
@@ -334,6 +344,10 @@ class ServiceProvider extends PragmaRXServiceProvider
 
                 new LanguageDetect()
             );
+
+            $this->repositoryManagerIsBooted = true;
+
+            return $manager;
         });
     }
 
@@ -377,25 +391,15 @@ class ServiceProvider extends PragmaRXServiceProvider
     protected function registerErrorHandler()
     {
         if ($this->getConfig('log_exceptions')) {
-            if (isLaravel5()) {
-                $illuminateHandler = 'Illuminate\Contracts\Debug\ExceptionHandler';
+            $illuminateHandler = 'Illuminate\Contracts\Debug\ExceptionHandler';
 
-                $handler = new TrackerExceptionHandler(
-                    $this->getTracker(),
-                    $this->app[$illuminateHandler]
-                );
+            $handler = new TrackerExceptionHandler(
+                $this->getTracker(),
+                $this->app[$illuminateHandler]
+            );
 
-                // Replace original Illuminate Exception Handler by Tracker's
-                $this->app[$illuminateHandler] = $handler;
-            } else {
-                $me = $this;
-
-                $this->app->error(
-                    function (\Exception $exception, $code) use ($me) {
-                        $me->app['tracker']->handleException($exception, $code);
-                    }
-                );
-            }
+            // Replace original Illuminate Exception Handler by Tracker's
+            $this->app[$illuminateHandler] = $handler;
         }
     }
 
@@ -473,7 +477,7 @@ class ServiceProvider extends PragmaRXServiceProvider
         });
 
         $this->app['events']->listen('*', function ($object = null) use ($me) {
-            if ($me->app['tracker.events']->isOff()) {
+            if ($me->app['tracker.events']->isOff() || !$me->isFullyBooted()) {
                 return;
             }
 
