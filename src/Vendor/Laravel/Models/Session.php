@@ -19,17 +19,6 @@ class Session extends Base
         'is_robot',
     ];
 
-    public function __construct(array $attributes = [])
-    {
-        // https://github.com/antonioribeiro/tracker/issues/402
-        static::$traitInitializers['PragmaRX\Tracker\Vendor\Laravel\Models\Session'] = ['placeholder'];
-        parent::__construct($attributes);
-    }
-
-    protected function placeholder(){
-        // Satisfy the initializer above
-    }
-
     public function user()
     {
         return $this->belongsTo($this->getConfig()->get('user_model'));
