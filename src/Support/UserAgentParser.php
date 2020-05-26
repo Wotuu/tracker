@@ -20,6 +20,8 @@ class UserAgentParser
     {
         if (!$userAgent && isset($_SERVER['HTTP_USER_AGENT'])) {
             $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        } else {
+            $userAgent = 'fake';
         }
 
         $this->parser = Parser::create()->parse($userAgent);
