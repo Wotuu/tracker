@@ -1423,16 +1423,16 @@
         },
         {
             "name": "pragmarx/datatables",
-            "version": "v1.4.12",
+            "version": "dev-wotuu-bugfix",
             "source": {
                 "type": "git",
-                "url": "https://github.com/antonioribeiro/laravel4-datatables-package.git",
-                "reference": "142631346d01c074248b80c8bc55fdfea255e23e"
+                "url": "https://github.com/Wotuu/laravel4-datatables-package.git",
+                "reference": "0dcadb66ca8801c5da1e506dc946d2c42817b565"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antonioribeiro/laravel4-datatables-package/zipball/142631346d01c074248b80c8bc55fdfea255e23e",
-                "reference": "142631346d01c074248b80c8bc55fdfea255e23e",
+                "url": "https://api.github.com/repos/Wotuu/laravel4-datatables-package/zipball/0dcadb66ca8801c5da1e506dc946d2c42817b565",
+                "reference": "0dcadb66ca8801c5da1e506dc946d2c42817b565",
                 "shasum": ""
             },
             "require": {
