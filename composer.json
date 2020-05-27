@@ -6,6 +6,12 @@
     "keywords": ["tracker", "tracking", "visitor", "logging", "user agent", "mobile detection", "laravel", "pragmarx"],
 
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Wotuu/laravel4-datatables-package"
+        }
+    ],
 
     "authors": [
         {
