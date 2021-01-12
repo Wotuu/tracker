@@ -34,10 +34,12 @@ class Handler implements ExceptionHandler
 
     public function handleThrowable(Throwable $throwable)
     {
-        try {
-            $this->tracker->handleThrowable($throwable);
-        } catch (\Exception $e) {
-            // Ignore Tracker exceptions
+        if (!in_array(get_class($throwable), $this->tracker->getConfig('ignore_exceptions'))) {
+            try {
+                $this->tracker->handleThrowable($throwable);
+            } catch (\Exception $e) {
+                // Ignore Tracker exceptions
+            }
         }
 
         // Call Laravel Exception Handler
@@ -49,7 +51,9 @@ class Handler implements ExceptionHandler
         try {
             $error = ExceptionFactory::make($err_severity, $err_msg);
 
-            $this->tracker->handleThrowable($error);
+            if (!in_array(get_class($error), $this->tracker->getConfig('ignore_exceptions'))) {
+                $this->tracker->handleThrowable($error);
+            }
         } catch (\Exception $e) {
             // Ignore Tracker exceptions
         }
@@ -61,7 +65,9 @@ class Handler implements ExceptionHandler
     public function report(Throwable $e)
     {
         try {
-            $this->tracker->handleThrowable($e);
+            if (!in_array(get_class($e), $this->tracker->getConfig('ignore_exceptions'))) {
+                $this->tracker->handleThrowable($e);
+            }
         } catch (Exception $exception) {
             // ignore
         }
